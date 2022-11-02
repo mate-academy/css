@@ -312,6 +312,14 @@ type CourseUser {
   course: Course # child resolver is needed
   user: User # child resolver is needed
 }
+
+// ✅ good
+type CourseUser {
+  id: Int!
+  course: Course
+  user: User
+  courseId: Int! # needed for API tests
+}
 ```
 
 3\. Models
