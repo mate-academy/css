@@ -298,6 +298,8 @@ extend type Mutation {
 
 >❓Why? GraphQL schema supposes fetching nested resources using child resolvers instead of subsequent queries
 
+Add comment if the field is definitely needed in graphql schema
+
 ```bash
 // ❌ bad
 type CourseUser {
