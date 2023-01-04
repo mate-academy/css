@@ -352,7 +352,7 @@ export const chatLessonResolver = makeAuthResolver<
     }),
   })
 
-export class getCareerTestQuestionsResolver {}
+export class GetCareerTestQuestionsResolver {}
 ```
 
 #### 2.4. Write resolver class name in Uppercase
