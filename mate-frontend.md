@@ -7,8 +7,8 @@
     - [1.2. Rename old components before refactoring](#12-rename-old-components-before-refactoring)
 - [2. CSS](#2-css)
     - [2.1. Use `rem-calc` function for "size" and "indent" values instead of hardcoding pixels](#21-use-rem-calc-function-for-size-and-indent-values-instead-of-hardcoding-pixels)
-    - [1.2. Use `em` units for font-related properties](#12-use-em-units-for-font-related-properties)
-    - [2.2. Prefer internal atomic styles for indents](#22-prefer-internal-atomic-styles-for-indents)
+    - [2.2. Use `em` units for font-related properties](#22-use-em-units-for-font-related-properties)
+    - [2.3. Prefer internal atomic styles for indents](#23-prefer-internal-atomic-styles-for-indents)
 
 ## 1. General
 #### 1.1. Always add NoSSR to AuthUser query on landings
@@ -75,7 +75,7 @@ margin-left: rem-calc(8);
 
 Make sure to use it only for `size` and `indent`. It's not necessary to specify, for example, `border-radius` in `rem`;
 
-#### 1.2. Use `em` units for font-related properties
+#### 2.2. Use `em` units for font-related properties
 
 >❓Why? Otherwise it will be inconsistent if font size changes
 
@@ -91,7 +91,7 @@ line-height: 1.33em; // 32/24 = ~1.33
 letter-spacing: 0.06em; // 2/32 = ~0.06
 ```
 
-#### 2.2. Prefer internal atomic styles for indents
+#### 2.3. Prefer internal atomic styles for indents
 
 ❌ bad
 ```jsx
