@@ -6,7 +6,8 @@
     - [1.1. Use repository instead of explicit ORM methods to fetch data from DB](#11-use-repository-instead-of-explicit-orm-methods-to-fetch-data-from-db)
     - [1.2. Always use plain objects instead of ORM instances. Avoid using ORM specific methods outside of the repository](#12-always-use-plain-objects-instead-of-orm-instances-avoid-using-orm-specific-methods-outside-of-the-repository)
     - [1.3. Use `find` and `get` prefixes to specify whether method returns `null` or throws an Error](#13-use-find-and-get-prefixes-to-specify-whether-method-returns-null-or-throws-an-error)
-    - [1.4. Store common entity related errors in constants](#14-store-common-entity-related-errors-in-constants)
+    - [1.4. Use data-loaders instead of ORM methods in `find` and `get` methods](#14-use-data-loaders-instead-of-orm-methods-in-find-and-get-methods)
+    - [1.5. Store common entity related errors in constants](#15-store-common-entity-related-errors-in-constants)
 - [2\. GraphQL](#2-graphql)
     - [2.1. Always include modified objects in mutation responses](#21-always-include-modified-objects-in-mutation-responses)
     - [2.2. Do not add foreign keys to the GraphQL schema until it's really needed](#22-do-not-add-foreign-keys-to-the-graphql-schema-until-its-really-needed)
@@ -220,7 +221,7 @@ class UserRepository {
 
 
 
->❓Why? If the record is already fetched, it's better to use it instead of fetching it again. Data-loaders are used to cache the fetched data and return it if it's already fetched. Also, lots of separate DB calls are merged into one batch call in data-loader case. See examples of data-loaders in *.loaders folders in api modules.
+>❓Why? If the record is already fetched, it's better to use it instead of fetching it again. [data-loaders](https://www.npmjs.com/package/dataloader) are used to cache the fetched data and return it if it's already fetched. Also, lots of separate DB calls are merged into one batch call in data-loader case. See examples of data-loaders in *.loaders folders in api modules.
 
 
 
