@@ -2,7 +2,7 @@
 
 [go/e2e-testing-style-guide](http://go/e2e-testing-style-guide)
 
-- [1\. Factory classes](#1-fixtures)
+- [1\. Factory classes](#1-factory-classes)
   - [1.1. Use Factory classes only for Entities](#11-use-factory-classes-for-entities)
 - [2\. Page objects](#2-page-objects)
   - [2.1. Define page locators outside the constructor](#21-define-page-locators-outside-the-constructor)
