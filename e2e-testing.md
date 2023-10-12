@@ -3,7 +3,7 @@
 [go/e2e-testing-style-guide](http://go/e2e-testing-style-guide)
 
 - [1\. Factory classes](#1-factory-classes)
-  - [1.1. Use Factory classes only for Entities](#11-use-factory-classes-for-entities)
+  - [1.1. Use Factory classes for Entities only](#11-use-factory-classes-for-entities-only)
 - [2\. Page objects](#2-page-objects)
   - [2.1. Define page locators outside the constructor](#21-define-page-locators-outside-the-constructor)
   - [2.2. Parametrized page URLs defining](#22-parametrized-page-urls-defining)
@@ -13,7 +13,7 @@
 - [3\. Test scenarios](#3-test-scenarios)
   - [3.1. Use underscore separator for test folders naming](#31-use-underscore-separator-for-test-folders-naming)
   - [3.2. Use folders for test suite organization](#32-use-folders-for-test-suite-organization)
-  - [3.3. Use one spec file per one test](#33-use-one-spec-per-one-test)
+  - [3.3. Use one spec file per one test](#33-use-one-spec-file-per-one-test)
   - [3.4. Before block should not contain common test data preparation](#34-before-block-should-not-contain-common-test-data-preparation)
   - [3.5. Test block should only contain test steps_and_assertions](#35-test-block-should-only-contain-test-steps-and-assertions)
 - [4\. Assertions](#4-assertions)
@@ -24,7 +24,7 @@
 1\. Factory classes
 --------------
 
-#### 1.1. Use Factory classes only for Entities
+#### 1.1. Use Factory classes for Entities only
 
 The ```FactoryItem``` class should be extended for each new Entity like User, Course, Event, StudentGroup class.
 For the tables which contains additional information for the Item it's recommended to create a ```link``` method.
