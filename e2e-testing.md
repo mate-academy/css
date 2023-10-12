@@ -3,12 +3,13 @@
 [go/e2e-testing-style-guide](http://go/e2e-testing-style-guide)
 
 - [1\. Factory classes](#1-fixtures)
-    - [1.1. Use Factory classes only for Entities](#11-use-factory-classes-for-entities)
+  - [1.1. Use Factory classes only for Entities](#11-use-factory-classes-for-entities)
 - [2\. Page objects](#2-page-objects)
-    - [2.1. Define page locators outside the constructor](#21-define-page-locators-outside-the-constructor)
-    - [2.2. Parametrized page URLs defining](#22-parametrized-page-urls-defining)
-    - [2.3. Use Components to re-use common page element groups](#23-use-components-to-re-use-common-page-element-groups)
-    - [2.4. Do not use dynamic values in allure step text](#24-do-not-use-dynamic-values-in-allure-step-text)
+  - [2.1. Define page locators outside the constructor](#21-define-page-locators-outside-the-constructor)
+  - [2.2. Parametrized page URLs defining](#22-parametrized-page-urls-defining)
+  - [2.3. Use Components to re-use common page element groups](#23-use-components-to-re-use-common-page-element-groups)
+  - [2.4. Do not use dynamic values in allure step text](#24-do-not-use-dynamic-values-in-allure-step-text)
+  - [2.5 Use fill instead of type](#25-use-fill-instead-of-type)
 - [3\. Test scenarios](#2-test-scenarios)
   - [3.1. Use snake_case for test folders naming](#31-use-snake-case-for-test-folders-naming)
   - [3.2. Use folders for test suite organization](#32-use-folders-for-test-suite-organization)
@@ -30,7 +31,7 @@ For the tables which contains additional information for the Item it's recommend
 
 
 ```typescript
-// ✅ good
+// ✅ recommended
 export class User extends FactoryItem {
 
   public constructor(
@@ -66,7 +67,7 @@ Please define locators in the page object classes and components using the below
 There could be different approaches, but we agreed to follow a single style within the organization.
 
 ```typescript
-// ❌ bad
+// ❌ not recommended
 export class SignInPage extends BasePage{
   private readonly emailField: Locator;
 
@@ -76,7 +77,7 @@ export class SignInPage extends BasePage{
   }
 }
 
-// ✅ good
+// ✅ recommended
 export class SignInPage extends BasePage{
   private readonly emailField = this.page.getByTestId('sign-in-user-email');
 
@@ -90,10 +91,27 @@ export class SignInPage extends BasePage{
 
 #### 2.2. Parametrized page URLs defining
 
-Use the below approach to define the parametrized page object URLs.
+Use the parametrized ROUTES to define the parametrized page object URLs.
 
 ```typescript
-// ✅ good
+// ❌ not recommended
+interface Options {
+  chatId: number;
+}
+
+export class ChatPage extends LoggedInBasePage {
+
+  constructor(
+    page: Page,
+    options: Options,
+  ) {
+    super(page);
+
+    this.url = `${ROUTES.chat}\\${options.chatId}`;
+  }
+}
+
+// ✅ recommended
 interface Options {
   chatId: number;
 }
@@ -115,6 +133,7 @@ export class ChatPage extends LoggedInBasePage {
 #### 2.3. Use Components to re-use common page element groups
 
 
+Do not repeat the code for page elements.
 If you defined some common elements from the header, footer, sideBar, or some popups that appear on several pages - make sure to define them in the corresponding component class.
 
 
@@ -125,7 +144,7 @@ If you defined some common elements from the header, footer, sideBar, or some po
 Do not use dynamic values in allure step text becuase that way new test case will be added to the Allure TestOps on each test re-run.
 
 ```typescript
-// ❌ bad
+// ❌ not recommended
 async typeCourseName(name: string): Promise<void> {
   await test.step(`Type course name ${name}`, async () => {
     await this.courseDropwDown.type(name);
@@ -133,7 +152,7 @@ async typeCourseName(name: string): Promise<void> {
 }
 
 
-// ✅ good
+// ✅ recommended
 async typeCourseName(name: string): Promise<void> {
   await test.step('Type course name', async () => {
     await this.courseDropwDown.type(name);
@@ -142,6 +161,21 @@ async typeCourseName(name: string): Promise<void> {
 
 ```
 
+#### 2.5. Use fill instead of type
+
+
+Use `fill()` instead of `type()` method, as `type()` is deprecated in [playwright](https://playwright.dev/docs/api/class-locator#locator-type).
+
+```typescript
+// ❌ not recommended
+
+await this.textField.type(text);
+
+
+// ✅ recommended
+
+await this.textField.fill(text);
+```
 
 3\. Test scenarios
 --------------
@@ -153,14 +187,14 @@ Use the snake_case for test folder names. Never use spaces in the folders and fi
 
 
 ```typescript
-// ❌ bad
+// ❌ not recommended
 - tests
     - e2e
         - Admin Tools
             - Homework-Review-Plugin
 
 
-// ✅ good
+// ✅ recommended
 - tests
    - e2e
         - Admin_Tools
@@ -178,7 +212,26 @@ Do not add test spec files from different suites to one folder. Create separate 
 #### 3.3. Use one spec file per one test
 
 
-Do not add several tests into one spec file. Each spec file should normally have one test scenario. The exception can be done for the parametrized tests.
+Do not add several tests into one spec file. Each spec file should normally have one e2e test scenario.
+The exception can be done for the parametrized tests.
+
+```typescript
+// ❌ not recommended
+test.describe(`New application form`, () => {
+    test('should allow to open the page')
+    test('should allow to be submitted')
+    test('should show the success message')
+  }
+)
+
+
+// ✅ recommended
+test.describe(`New application form`, () => {
+  test('should allow to successfully submit the application by new user')
+  }
+)
+
+```
 
 
 #### 3.4. Before block should not contain common test data preparation
@@ -189,7 +242,7 @@ In case one need to define some additional data preparation (for example seeding
 
 
 ```typescript
-// ❌ bad
+// ❌ not recommended
 test.beforeEach((
   {
     page,
@@ -212,7 +265,7 @@ test.beforeEach((
 });
 
 
-// ✅ good
+// ✅ recommended
 test.beforeEach((
   {
     page,
@@ -231,26 +284,41 @@ test.beforeEach((
 #### 3.5. Test block should only contain test steps and assertions
 
 Test block should contain only test-step or test-assertion methods - these are page object methods wrapped with allure steps and clearly describing user performed step or assertion.
-Do not use page locators directly in the test spec file - add page-object method instead.
+Do not use page locators or locator action methods directly in the test spec file - add page-object method instead.
 
 ```typescript
-// ❌ bad
-test('should allow to successfully sign in',
+// ❌ not recommended
+test('should allow to successfully create course',
   async () => {
-    await signInPage.visit();
-    await signInPage.emailField.fill(email);
-    ...
-    await signInPage.waitForSelector(successMessage);
+  ...
+    await createCoursePage.courseField.fill(name);
+  ...
+    await createCoursePage.waitForFlashMessage('Course_succesfully_created');
   });
 
 
-// ✅ good
-test('should allow to successfully sign in',
+// ✅ recommended
+export class CreateCoursePage {
+
+  async fillCourseName(name: string): Promise<void> {
+    await test.step(`Fill the course name`, async () => {
+      await this.courseField.fill(name);
+    });
+  }
+
+  async assertCourseCreatedMessage(): Promise<void> {
+    await test.step(`Assert course created message`, async () => {
+      await this.waitForFlashMessage('Course_succesfully_created');
+    });
+  }
+}
+
+test('should allow to successfully create course',
   async () => {
-    await signInPage.visit();
-    await signInPage.fillUserEmail(email);
     ...
-    await coursesListPage.assertOpened();
+    await createCoursePage.fillCourseName(name);
+    ...
+    await createCoursePage.assertCourseCreatedMessage();
   });
 
 ```
@@ -265,7 +333,7 @@ Create a separate method for each test assertion. This allows to read all the te
 
 
 ```typescript
-// ❌ bad
+// ❌ not recommended
 export class QuestionsEditorPage {
   async assertQuestionAdded(question: string): Promise<void> {
     await test.step(`Assert question added`, async () => {
@@ -276,7 +344,7 @@ export class QuestionsEditorPage {
   }
 }
 
-// ✅ good
+// ✅ recommended
 export class QuestionsEditorPage {
 
   async assertQuestionCreatedSuccessMessage(): Promise<void> {
@@ -298,7 +366,7 @@ export class QuestionsEditorPage {
 Always use expect for assertions.
 
 ```typescript
-// ❌ bad
+// ❌ not recommended
 export class QuestionsEditorPage {
 
   async assertQuestionIsPresentInTheList(question: string): Promise<void> {
@@ -308,7 +376,7 @@ export class QuestionsEditorPage {
   }
 }
 
-// ✅ good
+// ✅ recommended
 export class QuestionsEditorPage {
 
   async assertQuestionIsPresentInTheList(question: string): Promise<void> {
