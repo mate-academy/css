@@ -10,13 +10,13 @@
   - [2.3. Use Components to re-use common page element groups](#23-use-components-to-re-use-common-page-element-groups)
   - [2.4. Do not use dynamic values in allure step text](#24-do-not-use-dynamic-values-in-allure-step-text)
   - [2.5 Use fill instead of type](#25-use-fill-instead-of-type)
-- [3\. Test scenarios](#2-test-scenarios)
-  - [3.1. Use snake_case for test folders naming](#31-use-snake-case-for-test-folders-naming)
+- [3\. Test scenarios](#3-test-scenarios)
+  - [3.1. Use underscore separator for test folders naming](#31-use-underscore-separator-for-test-folders-naming)
   - [3.2. Use folders for test suite organization](#32-use-folders-for-test-suite-organization)
   - [3.3. Use one spec file per one test](#33-use-one-spec-per-one-test)
   - [3.4. Before block should not contain common test data preparation](#34-before-block-should-not-contain-common-test-data-preparation)
   - [3.5. Test block should only contain test steps_and_assertions](#35-test-block-should-only-contain-test-steps-and-assertions)
-- [4\. Assertions](#2-assertions)
+- [4\. Assertions](#4-assertions)
   - [4.1 One assertion per one test step method](#41-one-assertion-per-one-test-step-method)
   - [4.2 Use expect for assertions](#42-use-expect-for-assertions)
 
@@ -180,10 +180,10 @@ await this.textField.fill(text);
 3\. Test scenarios
 --------------
 
-#### 3.1. Use snake_case for test folders naming
+#### 3.1. Use underscore separator for test folders naming
 
 
-Use the snake_case for test folder names. Never use spaces in the folders and file names.
+Use the underscore separator for test folder names. Never use spaces in the folders and file names.
 
 
 ```typescript
