@@ -208,6 +208,29 @@ Use the snake_case for test folder names. Never use spaces in the folders and fi
 
 Do not add test spec files from different suites to one folder. Create separate folder for each test suite.
 
+```typescript
+// ❌ not recommended
+- tests
+  - e2e
+    - LMS_Editor
+      - Courses
+          - shouldBeCreatedWithOnlyRequiredFields.spec.ts
+          - shouldBeCreatedWithAllFields.spec.ts
+          - shouldEditOnlyRequiredFields.spec.ts
+          - shouldEditAllFields.spec.ts
+
+// ✅ recommended
+- tests
+  - e2e
+    - LMS_Editor
+      - Courses
+        - New_course
+            - shouldBeCreatedWithOnlyRequiredFields.spec.ts
+            - shouldBeCreatedWithAllFields.spec.ts
+        - Edit_course
+            - shouldEditOnlyRequiredFields.spec.ts
+            - shouldEditAllFields.spec.ts
+```
 
 #### 3.3. Use one spec file per one test
 
