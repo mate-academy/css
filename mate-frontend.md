@@ -51,6 +51,34 @@ export const ChatDeprecated: FC<Props> // ...
 export const Chat: FC<Props> // ...
 ```
 
+#### 1.3 Create new components for A/B tests
+When we run A/B tests, there's often a need to create new components. It's better to create new components instead of adding new props to existing ones. It will be easier to clean up afterward
+
+But how to handle naming in this case? Adding the `Deprecated` suffix doesn't seem right because the component doesn't become deprecated. The best solution is to add `V1`, `V2`, and so on suffixes to a new component
+
+```jsx
+// ❌ bad
+// old component - components/Chat/Chat.tsx
+export const Chat: FC<Props> // ...
+
+// new component - components/ChatNew/ChatNew.tsx
+export const ChatNew: FC<Props> // ...
+
+// ❌ bad
+// old component - components/ChatDeprecated/ChatDeprecated.tsx
+export const ChatDeprecated: FC<Props> // ...
+
+// new component - components/Chat/Chat.tsx
+export const Chat: FC<Props> // ...
+
+// ✅ good
+// old component - components/Chat/Chat.tsx
+export const Chat: FC<Props> // ...
+
+// new component - components/ChatV1/ChatV1.tsx
+export const ChatV1: FC<Props> // ...
+```
+
 ## 2. CSS
 
 #### 2.1. Use `rem-calc` function for "size" and "indent" values instead of hardcoding pixels
