@@ -516,4 +516,4 @@ To make file name shorter, try to avoid using the `should` word at the beginning
 
 - `shouldBeAbleToEditOwnUserProfile` > `editOwnUserProfile`
 - `shouldBeAbleToChangeTheCourse` > `courseChanging`
-- `shouldUpdateUsername` > 
+- `shouldUpdateUsername` > `updateUsername`
