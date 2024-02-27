@@ -486,7 +486,7 @@ export class QuestionsEditorPage {
 
 Always use expect for assertions.
 
-##### 4.2.1. Playwright
+#### 4.2.1. Playwright
 
 ```typescript
 // ❌ not recommended
@@ -511,7 +511,7 @@ export class QuestionsEditorPage {
 
 ```
 
-##### 4.2.2. Appium
+#### 4.2.2. Appium
 
 ```typescript
 // ❌ not recommended
