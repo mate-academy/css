@@ -513,6 +513,8 @@ export class QuestionsEditorPage {
 
 ##### 4.2.2. Appium
 
+Split methods for waitings and assertions. If the method is called 'assert' it should contain expect. If the method contains only waitForDisplayed, name it as 'waitFor...'.
+
 ```typescript
 // ❌ not recommended
 export class QuestionsEditorPage {
