@@ -205,7 +205,7 @@ interface CustomProps {
 
 ## 4. Raster assets images
 
-#### 4.1 Follow the quide while adding raster images to the website
+#### 4.1 Follow guide when adding raster images to the website
 
 To utilize benefits of images optimization provided by "image-handler" service we should store our images in the S3 bucket that is handled by this service. To do so - please follow the [guide](https://app.clickup.com/24383048/v/dc/q83j8-12520/q83j8-682675)
 
