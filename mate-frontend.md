@@ -15,9 +15,9 @@
     - [3.2 DO NOT EXTEND visuals of existing components by adding props like `isLarge`, `isRounded`, `isSomethingElse`](#32-do-not-extend-visuals-of-existing-components-by-adding-props-like-islarge-isrounded-issomethingelse)
     - [3.3 Always add new components to the UI kit. Follow figma naming](#33-always-add-new-components-to-the-ui-kit-follow-figma-naming)
     - [3.4 Document props using js-doc comments](#34-document-props-using-js-doc-comments)
-- [4. Raster assets images](#4-images)
-    - [4.1 Follow the quide while adding raster images to the website](#41-follow-guide-while-adding-images)
-    - [4.2 Emojis](#42-emojis)
+- [4. Raster assets images](#4-raster-assets-images)
+    - [4.1 Follow guide when adding raster images to the website](#41-follow-guide-when-adding-raster-images-to-the-website)
+    - [4.2 Emojis naming](#42-emojis-naming)
         - [4.2.1 Follow DRY](#421-follow-dry)
         - [4.2.2 Naming rules](#422-naming-rules)  
 
