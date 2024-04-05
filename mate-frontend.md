@@ -15,6 +15,11 @@
     - [3.2 DO NOT EXTEND visuals of existing components by adding props like `isLarge`, `isRounded`, `isSomethingElse`](#32-do-not-extend-visuals-of-existing-components-by-adding-props-like-islarge-isrounded-issomethingelse)
     - [3.3 Always add new components to the UI kit. Follow figma naming](#33-always-add-new-components-to-the-ui-kit-follow-figma-naming)
     - [3.4 Document props using js-doc comments](#34-document-props-using-js-doc-comments)
+- [4. Raster assets images](#4-images)
+    - [4.1 Follow the quide while adding raster images to the website](#41-follow-guide-while-adding-images)
+    - [4.2 Emojis](#42-emojis)
+        - [4.2.1 Follow DRY](#421-follow-dry)
+        - [4.2.2 Naming rules](#422-naming-rules)  
 
 ## 1. General
 #### 1.1. Always add NoSSR to AuthUser query on landings
@@ -197,3 +202,59 @@ interface CustomProps {
   ...
 }
 ```
+
+## 4. Raster assets images
+
+#### 4.1 Follow the quide while adding raster images to the website
+
+To utilize benefits of images optimization provided by "image-handler" service we should store our images in the S3 bucket that is handled by this service. To do so - please follow the [guide](https://app.clickup.com/24383048/v/dc/q83j8-12520/q83j8-682675)
+
+#### 4.2 Emojis naming
+
+Since the most raster asset images on the website is emojis - it is important to keep them reusable and understandable (otherwise we'll face mess with such images). To achieve this goal - please follow these rules while adding images
+
+##### 4.2.1 Follow DRY
+
+Before adding any images to the website - please be sure that it is not exists here yet. Previously we had different folders with emoji images and it lead to situation with 2 (in some cases even 3) same images and it wasn't clear which of them should be used. To prevent such cases - please check `src/images/icons/emoji` folder to be sure that the image you want to add is not exist there. This rule is also applicable for other images (not only for the emojis), so please check all folders inside `src/images` to be sure that you won't create a duplicate.
+
+##### 4.2.2 Naming rules
+
+The best approach in icon naming - is to check how does this emoji named in Slack, we use Slack for communications and use a lot of emojis there, so it is relatively easy to us to recognise an emoji from the name taken from there.
+Also for usage conveniency it is better to specify Emoji word in a name to make it clear that it is emoji. For example `IconWarning` and `IconEmojiWarning` are not the same (first one should be an icon with `svg` under the hood, second one - definitely raster one).
+
+Example: 🎉
+
+❌ Bad 
+```tsx
+export const PartyIcon: FCImage = (props) => {
+  /* Icon component code */
+};
+```
+Explanation: this name is not following `IconEmoji...` pattern
+
+❌ Bad 
+```tsx
+export const MyFeatureSuccessModalIcon: FCImage = (props) => {
+  /* Icon component code */
+};
+```
+Explanation: the emoji icon is generic, so it's name shouldn't specify any relation to the feature or component
+
+❗Please do not name generic icons according to it's usage. This approach lead to the mess in code and unnecessary duplicates
+
+
+❌ Bad 
+```tsx
+export const IconEmojiPartyHard: FCImage = (props) => {
+  /* Icon component code */
+};
+```
+Explanation: this name is not specific, and can be applied to any image
+
+✅ good
+```tsx
+export const IconEmojiTada: FCImage = (props) => {
+  /* Icon component code */
+};
+```
+Explanation: this name follow `IconEmoji...` pattern and contain the name of this emoji in Slack
