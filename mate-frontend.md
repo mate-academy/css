@@ -19,7 +19,7 @@
     - [4.1 Follow guide when adding raster images to the website](#41-follow-guide-when-adding-raster-images-to-the-website)
     - [4.2 Emojis naming](#42-emojis-naming)
         - [4.2.1 Follow DRY](#421-follow-dry)
-        - [4.2.2 Naming rules](#422-naming-rules)  
+        - [4.2.2 Naming rules](#422-naming-rules)
 
 ## 1. General
 #### 1.1. Always add NoSSR to AuthUser query on landings
@@ -88,6 +88,85 @@ export const Chat: FC<Props> // ...
 
 // new component - components/ChatV[1,2,3]/ChatV[1,2,3].tsx
 export const ChatV1: FC<Props> // ...
+```
+
+#### 1.4. Do not throw unhandled exceptions
+We avoid showing "white screen" to the user that occurs as a result of unhandled exception. We prefer logging an error to AWS CloudWatch and showing a user-friendly error message instead. Also it is possible to use try-catch block to handle exceptions in a proper way.
+
+```tsx
+// ❌ bad
+const getChatNameByType = (type: ChatType): string => {
+  switch (type) {
+    case ChatType.Private:
+      return 'Private chat';
+    case ChatType.Public:
+      return 'Public chat';
+    default:
+      throw new Error('Unknown chat type');
+  }
+}
+
+// ✅ good
+const getChatNameByType = (type: ChatType): string => {
+  switch (type) {
+    case ChatType.Private:
+      return 'Private chat';
+    case ChatType.Public:
+      return 'Public chat';
+    default:
+      logger.error(`Unknown chat type: ${type}`);
+
+      return 'Unrecognized chat';
+  }
+}
+```
+```tsx
+// ❌ bad
+const getTooltipPosition = (size: number): Position => {
+  if (hasEnoughSpaceAbove(size)) {
+    return Position.Top;
+  }
+  
+  if (hasEnoughSpaceBelow(size)) {
+    return Position.Bottom;
+  }
+
+  throw new Error('No space for tooltip');
+}
+
+// ✅ good
+const getTooltipPosition = (size: number): Position => {
+  if (hasEnoughSpaceAbove(size)) {
+    return Position.Top;
+  }
+
+  if (hasEnoughSpaceBelow(size)) {
+    return Position.Bottom;
+  }
+  
+  logger.error('No space for tooltip');
+
+  // Yes, it will not be fit in the viewport.
+  // But it's still better than white screen.
+  return Position.Top;
+}
+```
+```tsx
+// ❌ bad
+const getMessageJSX = (rawJSX: string): JSX.Element => {
+  return parseJSX(rawJSX); // possibly throws an error
+}
+
+// ✅ good
+const getMessageJSX = (rawJSX: string): JSX.Element => {
+  try {
+    return parseJSX(rawJSX);
+  } catch (error) {
+    logger.error(`Failed to fetch chat ${id}`);
+
+    return <p>Unrecognized message</p>;
+  }
+}
 ```
 
 ## 2. CSS
@@ -224,7 +303,7 @@ Also for usage conveniency it is better to specify Emoji word in a name to make 
 
 Example: 🎉
 
-❌ Bad 
+❌ Bad
 ```tsx
 export const PartyIcon: FCImage = (props) => {
   /* Icon component code */
@@ -232,7 +311,7 @@ export const PartyIcon: FCImage = (props) => {
 ```
 Explanation: this name is not following `IconEmoji...` pattern
 
-❌ Bad 
+❌ Bad
 ```tsx
 export const MyFeatureSuccessModalIcon: FCImage = (props) => {
   /* Icon component code */
@@ -243,7 +322,7 @@ Explanation: the emoji icon is generic, so it's name shouldn't specify any relat
 ❗Please do not name generic icons according to it's usage. This approach lead to the mess in code and unnecessary duplicates
 
 
-❌ Bad 
+❌ Bad
 ```tsx
 export const IconEmojiPartyHard: FCImage = (props) => {
   /* Icon component code */
