@@ -6,6 +6,7 @@
     - [1.1. Always add NoSSR to AuthUser query on landings](#11-always-add-nossr-to-authuser-query-on-landings)
     - [1.2. Rename old components before refactoring](#12-rename-old-components-before-refactoring)
     - [1.3. Create new components for A/B tests](#13-create-new-components-for-ab-tests)
+    - [1.4. Do not throw unhandled exceptions](#14-do-not-throw-unhandled-exceptions)
 - [2. CSS](#2-css)
     - [2.1. Use `rem-calc` function for "size" and "indent" values instead of hardcoding pixels](#21-use-rem-calc-function-for-size-and-indent-values-instead-of-hardcoding-pixels)
     - [2.2. Use `em` units for font-related properties](#22-use-em-units-for-font-related-properties)
@@ -126,7 +127,7 @@ const getTooltipPosition = (size: number): Position => {
   if (hasEnoughSpaceAbove(size)) {
     return Position.Top;
   }
-  
+
   if (hasEnoughSpaceBelow(size)) {
     return Position.Bottom;
   }
@@ -143,7 +144,7 @@ const getTooltipPosition = (size: number): Position => {
   if (hasEnoughSpaceBelow(size)) {
     return Position.Bottom;
   }
-  
+
   logger.error('No space for tooltip');
 
   // Yes, it will not be fit in the viewport.
@@ -162,7 +163,7 @@ const getMessageJSX = (rawJSX: string): JSX.Element => {
   try {
     return parseJSX(rawJSX);
   } catch (error) {
-    logger.error(`Failed to fetch chat ${id}`);
+    logger.error(`Failed to parse JSX`);
 
     return <p>Unrecognized message</p>;
   }
