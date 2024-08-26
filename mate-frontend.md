@@ -42,25 +42,30 @@ const { data } = useAuthUserQuery({
 });
 ```
 
-#### 1.2. Rename old components before refactoring
-Let's say the `Chat` component needs refactoring and it's quite complicated to make changes in place. Before creating new `Chat`, rename the existing one to `ChatDeprecated`. It works extremely good for cleanup afterwards
+#### 1.2. Rename old files before refactoring
+Let's say the `useIsOpenState` component needs refactoring and it's quite complicated to make changes in place. Before creating new `useIsOpenState`, rename the existing one to `useIsOpenStateDeprecated`. It works extremely good for cleanup afterwards.
 
-Why not naming new component with `New` suffix? Because it will be hard to understand what is deprecated and another renaming step will be required afterwards (`ChatNew -> Chat`)
+When refactoring a widely-used component, it’s better to mark the old version as deprecated, rather than refactoring all usages and removing it immediately. Use a deprecation annotation in the old component with an explanation of the changes and how to migrate. This allows developers to see the deprecation notice in their IDE and understand how to update their code accordingly.
+
+Why not naming new component with `New` suffix? Because it will be hard to understand what is deprecated and another renaming step will be required afterwards (`useIsOpenStateNew -> useIsOpenState`)
 
 ```jsx
 // ❌ bad
-// old component - components/Chat/Chat.tsx
-export const Chat: FC<Props> // ...
+// old component - hooks/useIsOpenState.tsx
+export const useIsOpenState = () => // ...
 
-// new component - components/ChatNew/ChatNew.tsx
-export const ChatNew: FC<Props> // ...
+// new component - hooks/useIsOpenStateNew.tsx
+export const useIsOpenStateNew = () => // ...
 
 // ✅ good
-// old component - components/ChatDeprecated/ChatDeprecated.tsx
-export const ChatDeprecated: FC<Props> // ...
+// old component - hooks/useIsOpenStateDeprecated.tsx
+/**
+ * @deprecated Use useIsOpenState instead.The type of return value was changed from array to object.
+ */
+export const useIsOpenStateDeprecated = () => // ...
 
-// new component - components/Chat/Chat.tsx
-export const Chat: FC<Props> // ...
+// new component - hooks/useIsOpenState.tsx
+export const useIsOpenState = () => // ...
 ```
 
 #### 1.3. Create new components for A/B tests
