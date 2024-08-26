@@ -42,7 +42,7 @@ const { data } = useAuthUserQuery({
 });
 ```
 
-#### 1.2. Rename old files before refactoring
+#### 1.2. Rename old components & functions before refactoring
 Let's say the `useIsOpenState` component needs refactoring and it's quite complicated to make changes in place. Before creating new `useIsOpenState`, rename the existing one to `useIsOpenStateDeprecated`. It works extremely good for cleanup afterwards.
 
 When refactoring a widely-used component, it’s better to mark the old version as deprecated, rather than refactoring all usages and removing it immediately. Use a deprecation annotation in the old component with an explanation of the changes and how to migrate. This allows developers to see the deprecation notice in their IDE and understand how to update their code accordingly.
