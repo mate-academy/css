@@ -51,20 +51,20 @@ Why not naming new component with `New` suffix? Because it will be hard to under
 
 ```jsx
 // ❌ bad
-// old component - hooks/useIsOpenState.tsx
+// old function - hooks/useIsOpenState.tsx
 export const useIsOpenState = () => // ...
 
-// new component - hooks/useIsOpenStateNew.tsx
+// new function - hooks/useIsOpenStateNew.tsx
 export const useIsOpenStateNew = () => // ...
 
 // ✅ good
-// old component - hooks/useIsOpenStateDeprecated.tsx
+// old function - hooks/useIsOpenStateDeprecated.tsx
 /**
  * @deprecated Use useIsOpenState instead.The type of return value was changed from array to object.
  */
 export const useIsOpenStateDeprecated = () => // ...
 
-// new component - hooks/useIsOpenState.tsx
+// new function - hooks/useIsOpenState.tsx
 export const useIsOpenState = () => // ...
 ```
 
