@@ -83,8 +83,8 @@
 - [12. Properties](#12-properties)
     - [12.1. Use dot notation when accessing properties.](#121-use-dot-notation-when-accessing-properties)
     - [12.3. Use bracket notation `[]` when accessing properties with a variable.](#123-use-bracket-notationwhen-accessing-properties-with-a-variable)
-    - [12.3. Use exponentiation operator `**` when calculating exponentiations.](#123-use-exponentiation-operatorwhen-calculating-exponentiations)
-    - [13. Variables](#13-variables)
+    - [12.4 Disallow optional fields that change method behavior](#124-disallow-optional-fields-that-change-method-behavior)
+- [13. Variables](#13-variables)
     - [13.1. Always use `const` or `let` to declare variables. Not doing so will result in global variables. We want to avoid polluting the global namespace. Captain Planet warned us of that.](#131-always-useconstorletto-declare-variables-not-doing-so-will-result-in-global-variables-we-want-to-avoid-polluting-the-global-namespace-captain-planet-warned-us-of-that)
     - [13.3. Use one `const` or `let` declaration per variable or assignment.](#133-use-oneconstorletdeclaration-per-variable-or-assignment)
     - [13.3. Group all your `const`s and then group all your `let`s.](#133-group-all-yourconsts-and-then-group-all-yourlets)
@@ -121,7 +121,8 @@
     - [18.4. Prefixing your comments with `FIXME` or `TODO` helps other developers quickly understand if you’re pointing out a problem that needs to be revisited, or if you’re suggesting a solution to the problem that needs to be implemented. These are different than regular comments because they are actionable. The actions are `FIXME: -- need to figure this out` or `TODO: -- need to implement`.](#184prefixing-your-comments-withfixmeortodohelps-other-developers-quickly-understand-if-youre-pointing-out-a-problem-that-needs-to-be-revisited-or-if-youre-suggesting-a-solution-to-the-problem-that-needs-to-be-implemented-these-are-different-than-regular-comments-because-they-are-actionable-the-actions-arefixme----need-to-figure-this-outortodo----need-to-implement)
     - [18.5. Use `// FIXME:` to annotate problems.](#185use-fixmeto-annotate-problems)
     - [18.6. Use `// TODO:` to annotate solutions to problems.](#186use-todoto-annotate-solutions-to-problems)
-    - [19. Whitespace](#19-whitespace)
+    - [18.7. Fields in Sequelize models and business logic methods should have a `@description` annnotation with JSDoc comment](#187-fields-in-sequelize-models-and-business-logic-methods-should-have-a-description-annnotation-with-jsdoc-comment)
+- [19. Whitespace](#19-whitespace)
     - [19.1. Use soft tabs (space character) set to 2 spaces.](#191use-soft-tabs-space-character-set-to-2-spaces)
     - [19.2. Place 1 space before the leading brace.](#192place-1-space-before-the-leading-brace)
     - [19.3. Place 1 space before the opening parenthesis in control statements (`if`, `while` etc.). Place no space between the argument list and the function name in function calls and declarations.](#193place-1-space-before-the-opening-parenthesis-in-control-statements-ifwhileetc-place-no-space-between-the-argument-list-and-the-function-name-in-function-calls-and-declarations)
@@ -2092,25 +2093,54 @@ function getProp(prop) {
 const isJedi = getProp('jedi');
 ```
 
+#### 12.4 Disallow optional fields that change method behavior
 
+💡 Note: it is related only to fields that impact behavior inside methods. In other words - if there is `if` in the code, related to the field, the field should be required
 
-#### 12.3. Use exponentiation operator `**` when calculating exponentiations.
+>❓Why? While it is generally recommended to avoid params that change method behavior, sometimes it's not possible to avoid. For such cases, having required fields helps to address all places where the method is used and update them accordingly. If the field is optional, it's easy to forget about it, leading to bugs
 
-eslint: [`no-restricted-properties`](https://eslint.org/docs/rules/no-restricted-properties)
-
-
-
-```javascript
+```typescript
 // ❌ bad
-const binary = Math.pow(2, 10);
+const getNextClosestWeekday = (options: {
+  // optional variable
+  keepReferenceTime?: boolean
+}): Date {
+  let closestWeekdayDate = // logic here
+
+  // changed behavior. easy to forget about if keepReferenceTime is not passed
+  if (!keepReferenceTime) {
+    closestWeekdayDate = closestWeekdayDate.set({
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    });
+  }
+}
 
 // ✅ good
-const binary = 2 ** 10;
+
+const getNextClosestWeekday = (options: {
+  // requierd variable
+  keepReferenceTime: boolean
+}): Date {
+  let closestWeekdayDate = // logic here
+
+  // changed behavior. As variable is always passed, it's obvious what's changed inside
+  if (!keepReferenceTime) {
+    closestWeekdayDate = closestWeekdayDate.set({
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    });
+  }
+}
+
 ```
 
-
-
-#### 13\. Variables
+13\. Variables
+----------
 
 
 
@@ -3079,16 +3109,88 @@ class Calculator extends Abacus {
 ```
 
 
+#### 18.7. Fields in Sequelize models and business logic methods should have a `@description` annnotation with JSDoc comment
 
-#### 19\. Whitespace
+>❓Why? It gives more context right at the moment of reading code. Especially useful for people working with other teams' code. Extremely useful for QAs, Data analytics, new Mates and others who don't work with particular module day to day but needs context.
 
+>❓What is "Business logic method"? In short, if method requires domain context, it is considered as the business logic one. There is no need to write description to "sum" helper
 
+Example of business logic method:
+**/modules/subscription/subscription.service.ts**
+```typescript
+  /**
+   * @description Payment is "intro" if it is a FIRST payment and
+   * payment_type is TRIAL or INTRO_OFFER. Usually it means this payment is processed
+   * with a discount.
+   */
+  async isIntroPayment(
+    options: {
+      // list of options
+    },
+  ): Promise<boolean> {
+    // rest of code here
+  }
+```
+
+**models/Subscription.ts**
+```typescript
+// ❌ bad
+export class Subscription extends ModelBase<User> {
+  @Column
+  started: boolean;
+
+  @Column({
+    type: DataType.DOUBLE,
+  })
+  price: number;
+
+  @ForeignKey(() => Currency)
+  @Column({
+    field: 'currency_id',
+  })
+  currencyId: number;
+}
+// ----
+
+// ✅ good
+export class Subscription extends ModelBase<User> {
+  /**
+   * @description Is subscription started. If true, user has access to the subscription benefits.
+   * Is set up after the first payment.
+   */
+  @Column
+  started: boolean;
+
+  /**
+   * @description Subscription price. Copied on creation from the SubscriptionPlanPricingOption or from the SubscriptionPlan
+   * if the pricing option is not set.
+   * It allows to store the price at the moment of the subscription creation and not to change it on the plan changes.
+   */
+  @Column({
+    type: DataType.DOUBLE,
+  })
+  price: number;
+
+  /**
+   * @description Subscription currency id. Related to the Currency model.
+   * Copied on creation from the SubscriptionPlanPricingOption or from the SubscriptionPlan
+   * if the pricing option is not set.
+   * It allows to store the currency at the moment of the subscription creation and not to change it on the plan changes.
+   */
+  @ForeignKey(() => Currency)
+  @Column({
+    field: 'currency_id',
+  })
+  currencyId: number;
+}
+```
+
+19\. Whitespace
+----------
 
 #### 19.1. Use soft tabs (space character) set to 2 spaces.
 
 eslint: [`indent`](https://eslint.org/docs/rules/indent.html)
-
-
 
 ```javascript
 // ❌ bad
