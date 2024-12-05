@@ -2,26 +2,26 @@
 
 [go/mate-api-style-guide](http://go/mate-api-style-guide)
 
-- [1\. Data fetching](#1-data-fetching)
+- [1. Data fetching](#1-data-fetching)
     - [1.1. Use repository instead of explicit ORM methods to fetch data from DB](#11-use-repository-instead-of-explicit-orm-methods-to-fetch-data-from-db)
     - [1.2. Always use plain objects instead of ORM instances. Avoid using ORM specific methods outside of the repository](#12-always-use-plain-objects-instead-of-orm-instances-avoid-using-orm-specific-methods-outside-of-the-repository)
     - [1.3. Use `find` and `get` prefixes to specify whether method returns `null` or throws an Error](#13-use-find-and-get-prefixes-to-specify-whether-method-returns-null-or-throws-an-error)
     - [1.4. Use data-loaders instead of ORM methods in `find` and `get` methods](#14-use-data-loaders-instead-of-orm-methods-in-find-and-get-methods)
     - [1.5. Store common entity related errors in constants](#15-store-common-entity-related-errors-in-constants)
-- [2\. GraphQL](#2-graphql)
+- [2. GraphQL](#2-graphql)
     - [2.1. Always include modified objects in mutation responses](#21-always-include-modified-objects-in-mutation-responses)
     - [2.2. Do not add foreign keys to the GraphQL schema until it's really needed](#22-do-not-add-foreign-keys-to-the-graphql-schema-until-its-really-needed)
     - [2.3. Use @Query, @Mutation, @Child decorators while creating resolvers](#23-use-query-mutation-child-decorators-while-creating-resolvers)
     - [2.4. Write resolver class name in Uppercase](#24-write-resolver-class-name-in-uppercase)
     - [2.5. Resolver name should end with Resolver, not Query/Mutation/Child](#25-resolver-name-should-end-with-resolver-not-querymutationchild)
-- [3\. Models](#3-models)
+- [3. Models](#3-models)
     - [3.1. Extend `ModelBase` while writing new Model](#31-extend-modelbase-while-writing-new-model)
     - [3.2. Nullable fields should be marked explicitly](#32-nullable-fields-should-be-marked-explicitly)
     - [3.3. Related model should **always** be marked as nullable even if foreign key has `not_null` constraint](#33-related-model-should-always-be-marked-as-nullable-even-if-foreign-key-has-not_null-constraint)
+- [4. Database](#4-database)
     - [4.1. Use seeders for modifying data and migrations for modifying DB structure](#41-use-seeders-for-modifying-data-and-migrations-for-modifying-db-structure)
     - [4.2. Follow naming template for seeders and migrations](#42-follow-naming-template-for-seeders-and-migrations)
     - [4.3. Use Enum data type for enumerable values instead of String + Check Constraint](#43-use-enum-data-type-for-enumerable-values-instead-of-string--check-constraint)
-1\. Data fetching
 -----------------
 
 #### 1.1. Use repository instead of explicit ORM methods to fetch data from DB
@@ -542,7 +542,6 @@ export class User extends ModelBase<User> {
   @HasMany(() => TypingSpeedTest)
   typingSpeedTests: TypingSpeedTest[];
 }
-
 // ----
 
 console.log(User.domain) // 'undefined' or 'null'
@@ -568,6 +567,7 @@ if (User.typingSpeedTests?.length > 0) {
 ```
 
 4\. Database
+----------
 
 #### 4.1. Use seeders for modifying data and migrations for modifying DB structure
 
