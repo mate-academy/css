@@ -27,6 +27,7 @@
     - [8.2. `FIXME` and `TODO` comments should have a link to the task](#82fixme-and-todo-comments-should-have-a-link-to-the-task)
     - [8.3. Use `// FIXME:` to annotate problems.](#83use-fixmeto-annotate-problems)
     - [8.4. Use `// TODO:` to annotate solutions to problems.](#84use-todoto-annotate-solutions-to-problems)
+    - [8.5. Fields in Sequelize models and business logic methods should have a `@description` annnotation with JSDoc comment](#85-fields-in-sequelize-models-and-business-logic-methods-should-have-a-description-annnotation-with-jsdoc-comment)
 - [9. Type Casting \& Coercion](#9-type-casting--coercion)
     - [9.1 Strings:](#91strings)
     - [9.2. Numbers: Use `Number` for type casting and `parseInt` always with a radix for parsing strings.](#92-numbers-usenumberfor-type-casting-andparseintalways-with-a-radix-for-parsing-strings)
@@ -598,6 +599,82 @@ class Calculator extends Abacus {
     // TODO: total should be configurable by an options param (https://task.manager/t/12345)
     this.total = 0;
   }
+}
+```
+
+#### 8.5. Fields in Sequelize models and business logic methods should have a `@description` annnotation with JSDoc comment
+
+>❓Why? It gives more context right at the moment of reading code. Especially useful for people working with other teams' code. Extremely useful for QAs, Data analytics, new Mates and others who don't work with particular module day to day but needs context.
+
+>❓What is "Business logic method"? In short, if method requires domain context, it is considered as the business logic one. There is no need to write description to "sum" helper
+
+Example of business logic method:
+**/modules/subscription/subscription.service.ts**
+```typescript
+  /**
+   * @description Payment is "intro" if it is a FIRST payment and
+   * payment_type is TRIAL or INTRO_OFFER. Usually it means this payment is processed
+   * with a discount.
+   */
+  async isIntroPayment(
+    options: {
+      // list of options
+    },
+  ): Promise<boolean> {
+    // rest of code here
+  }
+```
+
+**models/Subscription.ts**
+```typescript
+// ❌ bad
+export class Subscription extends ModelBase<User> {
+  @Column
+  started: boolean;
+
+  @Column({
+    type: DataType.DOUBLE,
+  })
+  price: number;
+
+  @ForeignKey(() => Currency)
+  @Column({
+    field: 'currency_id',
+  })
+  currencyId: number;
+}
+// ----
+
+// ✅ good
+export class Subscription extends ModelBase<User> {
+  /**
+   * @description Is subscription started. If true, user has access to the subscription benefits.
+   * Is set up after the first payment.
+   */
+  @Column
+  started: boolean;
+
+  /**
+   * @description Subscription price. Copied on creation from the SubscriptionPlanPricingOption or from the SubscriptionPlan
+   * if the pricing option is not set.
+   * It allows to store the price at the moment of the subscription creation and not to change it on the plan changes.
+   */
+  @Column({
+    type: DataType.DOUBLE,
+  })
+  price: number;
+
+  /**
+   * @description Subscription currency id. Related to the Currency model.
+   * Copied on creation from the SubscriptionPlanPricingOption or from the SubscriptionPlan
+   * if the pricing option is not set.
+   * It allows to store the currency at the moment of the subscription creation and not to change it on the plan changes.
+   */
+  @ForeignKey(() => Currency)
+  @Column({
+    field: 'currency_id',
+  })
+  currencyId: number;
 }
 ```
 

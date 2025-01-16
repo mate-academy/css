@@ -121,7 +121,6 @@
     - [18.4. Prefixing your comments with `FIXME` or `TODO` helps other developers quickly understand if you’re pointing out a problem that needs to be revisited, or if you’re suggesting a solution to the problem that needs to be implemented. These are different than regular comments because they are actionable. The actions are `FIXME: -- need to figure this out` or `TODO: -- need to implement`.](#184prefixing-your-comments-withfixmeortodohelps-other-developers-quickly-understand-if-youre-pointing-out-a-problem-that-needs-to-be-revisited-or-if-youre-suggesting-a-solution-to-the-problem-that-needs-to-be-implemented-these-are-different-than-regular-comments-because-they-are-actionable-the-actions-arefixme----need-to-figure-this-outortodo----need-to-implement)
     - [18.5. Use `// FIXME:` to annotate problems.](#185use-fixmeto-annotate-problems)
     - [18.6. Use `// TODO:` to annotate solutions to problems.](#186use-todoto-annotate-solutions-to-problems)
-    - [18.7. Fields in Sequelize models and business logic methods should have a `@description` annnotation with JSDoc comment](#187-fields-in-sequelize-models-and-business-logic-methods-should-have-a-description-annnotation-with-jsdoc-comment)
 - [19. Whitespace](#19-whitespace)
     - [19.1. Use soft tabs (space character) set to 2 spaces.](#191use-soft-tabs-space-character-set-to-2-spaces)
     - [19.2. Place 1 space before the leading brace.](#192place-1-space-before-the-leading-brace)
@@ -142,10 +141,10 @@
     - [19.17 Avoid trailing spaces at the end of lines.](#1917avoid-trailing-spaces-at-the-end-of-lines)
     - [19.18 Avoid multiple empty lines and only allow one newline at the end of files.](#1918avoid-multiple-empty-lines-and-only-allow-one-newline-at-the-end-of-files)
 - [20. Commas](#20-commas)
-    - [20.1. Leading commas: **Nope.** ](#201leading-commasnope)
-    - [20.2. Additional trailing comma: **Yup.** ](#202additional-trailing-commayup)
+    - [20.1. Leading commas: **Nope.**](#201leading-commasnope)
+    - [20.2. Additional trailing comma: **Yup.**](#202additional-trailing-commayup)
 - [21. Semicolons](#21-semicolons)
-    - [21.1. **Yup.** ](#211-yup)
+    - [21.1. **Yup.**](#211-yup)
 - [22. Type Casting \& Coercion](#22-type-casting--coercion)
     - [22.1. Perform type coercion at the beginning of the statement.](#221perform-type-coercion-at-the-beginning-of-the-statement)
     - [22.2 Strings:](#222strings)
@@ -3108,83 +3107,6 @@ class Calculator extends Abacus {
 }
 ```
 
-
-#### 18.7. Fields in Sequelize models and business logic methods should have a `@description` annnotation with JSDoc comment
-
->❓Why? It gives more context right at the moment of reading code. Especially useful for people working with other teams' code. Extremely useful for QAs, Data analytics, new Mates and others who don't work with particular module day to day but needs context.
-
->❓What is "Business logic method"? In short, if method requires domain context, it is considered as the business logic one. There is no need to write description to "sum" helper
-
-Example of business logic method:
-**/modules/subscription/subscription.service.ts**
-```typescript
-  /**
-   * @description Payment is "intro" if it is a FIRST payment and
-   * payment_type is TRIAL or INTRO_OFFER. Usually it means this payment is processed
-   * with a discount.
-   */
-  async isIntroPayment(
-    options: {
-      // list of options
-    },
-  ): Promise<boolean> {
-    // rest of code here
-  }
-```
-
-**models/Subscription.ts**
-```typescript
-// ❌ bad
-export class Subscription extends ModelBase<User> {
-  @Column
-  started: boolean;
-
-  @Column({
-    type: DataType.DOUBLE,
-  })
-  price: number;
-
-  @ForeignKey(() => Currency)
-  @Column({
-    field: 'currency_id',
-  })
-  currencyId: number;
-}
-// ----
-
-// ✅ good
-export class Subscription extends ModelBase<User> {
-  /**
-   * @description Is subscription started. If true, user has access to the subscription benefits.
-   * Is set up after the first payment.
-   */
-  @Column
-  started: boolean;
-
-  /**
-   * @description Subscription price. Copied on creation from the SubscriptionPlanPricingOption or from the SubscriptionPlan
-   * if the pricing option is not set.
-   * It allows to store the price at the moment of the subscription creation and not to change it on the plan changes.
-   */
-  @Column({
-    type: DataType.DOUBLE,
-  })
-  price: number;
-
-  /**
-   * @description Subscription currency id. Related to the Currency model.
-   * Copied on creation from the SubscriptionPlanPricingOption or from the SubscriptionPlan
-   * if the pricing option is not set.
-   * It allows to store the currency at the moment of the subscription creation and not to change it on the plan changes.
-   */
-  @ForeignKey(() => Currency)
-  @Column({
-    field: 'currency_id',
-  })
-  currencyId: number;
-}
-```
-
 19\. Whitespace
 ----------
 
@@ -3682,7 +3604,7 @@ var y = 2;
 
 
 
-#### 20.1. Leading commas: **Nope.** 
+#### 20.1. Leading commas: **Nope.**
 
 eslint: [`comma-style`](https://eslint.org/docs/rules/comma-style.html)
 
@@ -3722,7 +3644,7 @@ const hero = {
 
 
 
-#### 20.2. Additional trailing comma: **Yup.** 
+#### 20.2. Additional trailing comma: **Yup.**
 
 eslint: [`comma-dangle`](https://eslint.org/docs/rules/comma-dangle.html)
 
@@ -3832,7 +3754,7 @@ createHero(
 
 
 
-#### 21.1. **Yup.** 
+#### 21.1. **Yup.**
 
 eslint: [`semi`](https://eslint.org/docs/rules/semi.html)
 
@@ -4041,7 +3963,7 @@ for (let i = 0; i < array.length; i+=1) {
 
 #### 23.2. Use camelCase when naming objects, functions, and instances. Function names are typically verbs or verb phrases.
 
-eslint: [`camelcase`](https://eslint.org/docs/rules/camelcase.html) 
+eslint: [`camelcase`](https://eslint.org/docs/rules/camelcase.html)
 
 
 
