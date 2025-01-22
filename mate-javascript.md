@@ -13,6 +13,7 @@
     - [3.1. Avoid side effects with default parameters.](#31-avoid-side-effects-with-default-parameters)
     - [3.2. Always put default parameters last.](#32-always-put-default-parameters-last)
     - [3.3. If parameters number is greater than 2, put them into `options` parameter](#33-if-parameters-number-is-greater-than-2-put-them-into-options-parameter)
+    - [3.4 Do not use optional fields that change method behavior](#34-do-not-use-optional-fields-that-change-method-behavior)
 - [4. Arrow Functions](#4-arrow-functions)
     - [4.1. In case the expression spans over multiple lines, wrap it in parentheses for better readability.](#41-in-case-the-expression-spans-over-multiple-lines-wrap-it-in-parentheses-for-better-readability)
 - [5. Modules](#5-modules)
@@ -374,6 +375,51 @@ createUser({
 });
 ```
 
+#### 3.4 Do not use optional fields that change method behavior
+
+💡 Note: it is related only to fields that impact behavior inside methods. In other words - if there is `if` in the code, related to the field, the field should be required
+
+>❓Why? While it is generally recommended to avoid params that change method behavior, sometimes it's not possible to avoid. For such cases, having required fields helps to address all places where the method is used and update them accordingly. If the field is optional, it's easy to forget about it, leading to bugs
+
+```typescript
+// ❌ bad
+const getNextClosestWeekday = (options: {
+  // optional variable
+  keepReferenceTime?: boolean
+}): Date {
+  let closestWeekdayDate = // logic here
+
+  // changed behavior. easy to forget about if keepReferenceTime is not passed
+  if (!keepReferenceTime) {
+    closestWeekdayDate = closestWeekdayDate.set({
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    });
+  }
+}
+
+// ✅ good
+
+const getNextClosestWeekday = (options: {
+  // requierd variable
+  keepReferenceTime: boolean
+}): Date {
+  let closestWeekdayDate = // logic here
+
+  // changed behavior. As variable is always passed, it's obvious what's changed inside
+  if (!keepReferenceTime) {
+    closestWeekdayDate = closestWeekdayDate.set({
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    });
+  }
+}
+
+```
 
 4\. Arrow Functions
 -------------------
