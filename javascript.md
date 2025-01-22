@@ -83,7 +83,6 @@
 - [12. Properties](#12-properties)
     - [12.1. Use dot notation when accessing properties.](#121-use-dot-notation-when-accessing-properties)
     - [12.3. Use bracket notation `[]` when accessing properties with a variable.](#123-use-bracket-notationwhen-accessing-properties-with-a-variable)
-    - [12.4 Disallow optional fields that change method behavior](#124-disallow-optional-fields-that-change-method-behavior)
 - [13. Variables](#13-variables)
     - [13.1. Always use `const` or `let` to declare variables. Not doing so will result in global variables. We want to avoid polluting the global namespace. Captain Planet warned us of that.](#131-always-useconstorletto-declare-variables-not-doing-so-will-result-in-global-variables-we-want-to-avoid-polluting-the-global-namespace-captain-planet-warned-us-of-that)
     - [13.3. Use one `const` or `let` declaration per variable or assignment.](#133-use-oneconstorletdeclaration-per-variable-or-assignment)
@@ -2092,51 +2091,6 @@ function getProp(prop) {
 const isJedi = getProp('jedi');
 ```
 
-#### 12.4 Disallow optional fields that change method behavior
-
-💡 Note: it is related only to fields that impact behavior inside methods. In other words - if there is `if` in the code, related to the field, the field should be required
-
->❓Why? While it is generally recommended to avoid params that change method behavior, sometimes it's not possible to avoid. For such cases, having required fields helps to address all places where the method is used and update them accordingly. If the field is optional, it's easy to forget about it, leading to bugs
-
-```typescript
-// ❌ bad
-const getNextClosestWeekday = (options: {
-  // optional variable
-  keepReferenceTime?: boolean
-}): Date {
-  let closestWeekdayDate = // logic here
-
-  // changed behavior. easy to forget about if keepReferenceTime is not passed
-  if (!keepReferenceTime) {
-    closestWeekdayDate = closestWeekdayDate.set({
-      hour: 0,
-      minute: 0,
-      second: 0,
-      millisecond: 0,
-    });
-  }
-}
-
-// ✅ good
-
-const getNextClosestWeekday = (options: {
-  // requierd variable
-  keepReferenceTime: boolean
-}): Date {
-  let closestWeekdayDate = // logic here
-
-  // changed behavior. As variable is always passed, it's obvious what's changed inside
-  if (!keepReferenceTime) {
-    closestWeekdayDate = closestWeekdayDate.set({
-      hour: 0,
-      minute: 0,
-      second: 0,
-      millisecond: 0,
-    });
-  }
-}
-
-```
 
 13\. Variables
 ----------
